@@ -13,7 +13,7 @@ void push(stack *s,int value){
         printf("stack overflow\n");
     }
     else{
-        s->items[++(s->top)]=value;
+        s->items[(++(s->top))]=value;
     }
 }
 
@@ -27,20 +27,54 @@ int pop(stack *s){
     }
 }
 
-int evaluatepostfix(char * exp){
+// int evaluatepostfix(char * exp){
+//     stack s;
+//     s.top=-1;
+//     for(int i=0;exp[i]!='?';i++){
+//         if(isdigit(exp[i])){
+//             push(&s,exp[i]-'0');
+//         }
+//         else{
+//             int operand1=pop(&s);
+//             int operand2=pop(&s);
+//             switch(exp[i]){
+//                 case '+':
+//                 push(&s,operand1+operand2);
+//                 break;
+//                 case '-':
+//                     push(&s, operand1 - operand2);
+//                     break;
+//                 case '*':
+//                     push(&s, operand1 * operand2);
+//                     break;
+//                 case '/':
+//                     push(&s ,operand1 / operand2);
+//                     break;
+//             }
+//         }
+//     }
+//     return pop(&s);
+// }
+
+int evaluatepostfix(char *exp){
     stack s;
-    s.top=-1;
-    for(int i=0;i<exp[i];i++){
-        if(isdigit(exp[i])){
-            push(&s,exp[i]-'0');
-        }
-        else{
-            int operand1=pop(&s);
-            int operand2=pop(&s);
-            switch(exp[i]){
+    s.top = -1;
+    int num = 0;
+    for (int i = 0; exp[i] != '?'; i++) {
+        if (exp[i] == ' ') {
+            if (num != 0) {
+                push(&s, num);
+                num = 0;
+            }
+        } else if (isdigit(exp[i])) {
+            num = num * 10 + (exp[i] - '0');
+        } else {
+            int operand2 = pop(&s);
+            int operand1 = pop(&s);
+            switch (exp[i]) {
                 case '+':
-                push(&s,operand1+operand2);
-                break;
+                    push(&s, operand1 + operand2);
+                    break;
                 case '-':
                     push(&s, operand1 - operand2);
                     break;
@@ -48,13 +82,14 @@ int evaluatepostfix(char * exp){
                     push(&s, operand1 * operand2);
                     break;
                 case '/':
-                    push(&s ,operand1 / operand2);
+                    push(&s, operand1 / operand2);
                     break;
             }
         }
     }
     return pop(&s);
 }
+
 int main() {
     char exp[MAX_SIZE]="31 4 50 + * ?";
    
